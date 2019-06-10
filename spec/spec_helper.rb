@@ -13,4 +13,6 @@ RSpec.configure do |config|
   end
 
   config.expose_dsl_globally = true
+
+  ::Impersonator.logger.level = Logger::DEBUG
 end
