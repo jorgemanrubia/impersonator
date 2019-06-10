@@ -1,0 +1,7 @@
+---
+- !ruby/struct:Impersonator::MethodInvocation
+  method: !ruby/struct:Impersonator::Method
+    name: :foo
+    arguments: []
+    block: 
+  return_value: :bar

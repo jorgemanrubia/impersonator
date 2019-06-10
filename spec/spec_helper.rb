@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "impersonator"
+require "zeitwerk"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -15,4 +16,14 @@ RSpec.configure do |config|
   config.expose_dsl_globally = true
 
   ::Impersonator.logger.level = Logger::DEBUG
+
+  Dir['spec/support/hooks/**/*.rb'].each do |f|
+    load f
+  end
+
+  loader = Zeitwerk::Loader.for_gem
+  loader.push_dir('spec/support')
+  loader.setup
+
+  config.include Test::FileHelpers
 end

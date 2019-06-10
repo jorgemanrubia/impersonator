@@ -1,5 +1,7 @@
 module Impersonator
   class Proxy
+    include HasLogger
+
     attr_reader :impersonated_object
 
     def initialize(impersonated_object, recording:, impersonated_methods:)
@@ -23,10 +25,6 @@ module Impersonator
     private
 
     attr_reader :recording, :impersonated_methods
-
-    def logger
-      ::Impersonator.logger
-    end
 
     def invoke_impersonated_method(method_name, *args, &block)
       method = Method.new(name: method_name, arguments: args, block: block)
