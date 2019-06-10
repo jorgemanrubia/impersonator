@@ -1,7 +1,19 @@
 ---
 - !ruby/struct:Impersonator::MethodInvocation
   method: !ruby/struct:Impersonator::Method
-    name: :foo
+    name: :next
     arguments: []
     block: 
-  return_value: :bar
+  return_value: 1
+- !ruby/struct:Impersonator::MethodInvocation
+  method: !ruby/struct:Impersonator::Method
+    name: :next
+    arguments: []
+    block: 
+  return_value: 2
+- !ruby/struct:Impersonator::MethodInvocation
+  method: !ruby/struct:Impersonator::Method
+    name: :next
+    arguments: []
+    block: 
+  return_value: 3
