@@ -1,5 +1,5 @@
 module Impersonator
-  module Dsl
+  module Api
     def recording(label, &block)
       @current_recording = ::Impersonator::Recording.new(label, recordings_path: configuration.recordings_path)
       @current_recording.start

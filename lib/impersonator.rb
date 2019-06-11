@@ -9,7 +9,7 @@ loader = Zeitwerk::Loader.for_gem
 loader.setup
 
 module Impersonator
-  extend Dsl
+  extend Api
 
   def self.logger
     @logger ||= ::Logger.new(STDOUT).tap do |logger|
