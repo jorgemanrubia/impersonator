@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Impersonator
   class Recording
     include HasLogger
@@ -18,20 +20,20 @@ module Impersonator
     end
 
     def record(method, return_value)
-      method_invocation = MethodInvocation.new(method: method, return_value: return_value)
+      method_invocation = MethodInvocation.new(method_instance: method, return_value: return_value)
 
       @method_invocations << method_invocation
     end
 
     def replay(method)
       method_invocation = @method_invocations.shift
-      validate_method_signature!(method, method_invocation.method)
       raise Impersonator::Errors::MethodInvocationError, "Unexpected method invocation received: #{method}" unless method_invocation
 
-      block_spy = method_invocation.method.block_spy
-      if block_spy
-        return_value = method.block.call(*block_spy.arguments)
-        # @todo match return value!!
+      validate_method_signature!(method, method_invocation.method_instance)
+
+      block_spy = method_invocation.method_instance.block_spy
+      block_spy&.block_invocations&.each do |block_invocation|
+        method.block.call(*block_invocation.arguments)
       end
       method_invocation.return_value
     end
@@ -56,13 +58,13 @@ module Impersonator
     private
 
     def start_in_replay_mode
-      logger.debug "Replay mode"
+      logger.debug 'Replay mode'
       @replay_mode = true
       @method_invocations = YAML.load_file(file_path)
     end
 
     def start_in_record_mode
-      logger.debug "Recording mode"
+      logger.debug 'Recording mode'
       @replay_mode = false
       make_sure_fixtures_dir_exists
       @method_invocations = []
@@ -75,8 +77,10 @@ module Impersonator
     end
 
     def finish_in_replay_mode
-      raise Impersonator::Errors::MethodInvocationError, "Expecting #{@method_invocations.length} method invocations"\
-                                                          " that didn't happen: #{@method_invocations.inspect}" unless @method_invocations.empty?
+      unless @method_invocations.empty?
+        raise Impersonator::Errors::MethodInvocationError, "Expecting #{@method_invocations.length} method invocations"\
+                                                            " that didn't happen: #{@method_invocations.inspect}"
+      end
     end
 
     def file_path
@@ -89,8 +93,10 @@ module Impersonator
     end
 
     def validate_method_signature!(expected_method, actual_method)
-      raise Impersonator::Errors::MethodInvocationError, "Expecting method '#{expected_method}' but '#{actual_method}'"\
-                                                          " received" unless actual_method == expected_method
+      unless actual_method == expected_method
+        raise Impersonator::Errors::MethodInvocationError, "Expecting method '#{expected_method}' but '#{actual_method}'"\
+                                                            ' received'
+      end
     end
   end
 end

@@ -43,7 +43,7 @@ module Impersonator
       if recording.replay_mode?
         recording.replay(method)
       else
-        @impersonated_object.send(method_name, *args, &method.block_spy.block).tap do |return_value|
+        @impersonated_object.send(method_name, *args, &method&.block_spy&.block).tap do |return_value|
           recording.record(method, return_value)
         end
       end

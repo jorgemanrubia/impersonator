@@ -43,7 +43,11 @@ describe 'Default method return impersonation', clear_recordings: true do
       end
     end
 
-    pending 'replays yielding multiple times'
+    it 'replays yielding multiple times' do
+      test_impersonation do |impersonator|
+        expect { |block| impersonator.lineal_sequence(3, &block) }.to yield_successive_args(1, 2, 3)
+      end
+    end
   end
 
   def test_impersonation(&block)
@@ -64,6 +68,6 @@ describe 'Default method return impersonation', clear_recordings: true do
   end
 
   def build_impersonator
-    Impersonator.impersonate(real_calculator, :next, :previous, :sum)
+    Impersonator.impersonate(real_calculator, :next, :previous, :sum, :lineal_sequence)
   end
 end

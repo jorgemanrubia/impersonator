@@ -33,6 +33,15 @@ module Test
       end
     end
 
+    # Will yield 1, 2, 3 ... n
+    def lineal_sequence(n, &block)
+      invoked!
+
+      n.times do |index|
+        yield index + 1
+      end
+    end
+
     private
 
     def invoked!
