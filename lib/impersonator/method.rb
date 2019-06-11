@@ -6,6 +6,7 @@ module Impersonator
       arguments_string = arguments&.collect(&:to_s)&.join(', ')
 
       string << "(#{arguments_string})"
+      string << " {with block}" if block
       string
     end
 
@@ -27,7 +28,7 @@ module Impersonator
     end
 
     def ==(other_method)
-      self.name == other_method.name && self.arguments == other_method.arguments
+      self.name == other_method.name && self.arguments == other_method.arguments && !!block_spy == !!other_method.block_spy
     end
   end
 end

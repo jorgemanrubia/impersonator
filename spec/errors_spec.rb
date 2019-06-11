@@ -1,5 +1,6 @@
 describe 'Error detection', clear_recordings: true do
   let(:real_calculator) { Test::Calculator.new }
+  let(:block) { proc {} }
 
   describe Impersonator::Errors::ConfigurationError do
     it 'raises an error when trying to impersonate without starting a recording' do
@@ -40,11 +41,32 @@ describe 'Error detection', clear_recordings: true do
 
       Impersonator.recording('simple value') do
         impersonator = Impersonator.impersonate(real_calculator, :sum)
-        expect{ impersonator.sum(3, 4) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+        expect { impersonator.sum(3, 4) }.to raise_error(Impersonator::Errors::MethodInvocationError)
       end
     end
+
+    it 'raises an error when there is an invocation with a not expected a block' do
+      Impersonator.recording('simple value') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum, :lineal_sequence)
+        impersonator.sum(1, 2, &block)
+        impersonator.sum(1, 2)
+      end
+
+      real_calculator.reset
+
+      Impersonator.recording('simple value') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum, :lineal_sequence)
+
+        impersonator.sum(1, 2, &block)
+        expect { impersonator.sum(1, 2, &block) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+      end
+    end
+
   end
 
+  describe Impersonator::Errors::BlockInvocationError do
+    pending 'block mismatches'
+  end
 
   it 'raises an error when there more recorded invocations that actual invocations' do
     Impersonator.recording('simple value') do

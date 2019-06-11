@@ -1,3 +1,3 @@
 module Impersonator
-  BlockInvocation = Struct.new(:arguments, :dispatched, keyword_init: true)
+  BlockInvocation = Struct.new(:arguments, keyword_init: true)
 end

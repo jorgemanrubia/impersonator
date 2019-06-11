@@ -30,11 +30,8 @@ module Impersonator
       raise Impersonator::Errors::MethodInvocationError, "Unexpected method invocation received: #{method}" unless method_invocation
 
       validate_method_signature!(method, method_invocation.method_instance)
+      replay_block(method_invocation, method)
 
-      block_spy = method_invocation.method_instance.block_spy
-      block_spy&.block_invocations&.each do |block_invocation|
-        method.block.call(*block_invocation.arguments)
-      end
       method_invocation.return_value
     end
 
@@ -56,6 +53,13 @@ module Impersonator
     end
 
     private
+
+    def replay_block(recorded_method_invocation, method_to_replay)
+      block_spy = recorded_method_invocation.method_instance.block_spy
+      block_spy&.block_invocations&.each do |block_invocation|
+        method_to_replay.block.call(*block_invocation.arguments)
+      end
+    end
 
     def start_in_replay_mode
       logger.debug 'Replay mode'
