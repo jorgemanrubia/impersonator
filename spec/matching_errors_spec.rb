@@ -5,9 +5,14 @@ describe 'Error detection', clear_recordings: true do
     expect { Impersonator.impersonate(real_calculator, :next, :previous) }.to raise_error(Impersonator::Errors::ConfigurationError)
   end
 
-  pending 'raises an error when the method to impersonate does not exist'
+  it 'raises an error when the method to impersonate does not exist' do
+    Impersonator.recording('missing method') do
+      expect{ Impersonator.impersonate(real_calculator, :some_missing_method) }.to raise_error(Impersonator::Errors::ConfigurationError)
+    end
+  end
 
   pending 'raises an error when there is an invocation that is not recorded'
+
   pending 'raises an error when there more recorded invocations that actual invocations'
 
   def test_impersonation(&block)
