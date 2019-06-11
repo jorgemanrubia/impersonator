@@ -25,7 +25,12 @@ module Test
 
     def sum(number_1, number_2)
       invoked!
-      number_1 + number_2
+      result = number_1 + number_2
+      if block_given?
+        yield result
+      else
+        result
+      end
     end
 
     private

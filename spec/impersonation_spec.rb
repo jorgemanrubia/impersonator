@@ -2,13 +2,13 @@ describe 'Default method return impersonation', clear_recordings: true do
   let(:real_calculator) { Test::Calculator.new }
 
   context 'with methods without arguments' do
-    it 'can record and impersonate a method that return a simple value' do
+    it 'records and impersonates a method that return a simple value' do
       test_impersonation do |impersonator|
         expect(impersonator.next).to eq(1)
       end
     end
 
-    it 'can record and impersonate multiple invocations in a row of a method that returns a simple value' do
+    it 'records and impersonates multiple invocations in a row of a method that returns a simple value' do
       test_impersonation do |impersonator|
         expect(impersonator.next).to eq(1)
         expect(impersonator.next).to eq(2)
@@ -16,7 +16,7 @@ describe 'Default method return impersonation', clear_recordings: true do
       end
     end
 
-    it 'can record and impersonate multiple invocations of multiple methods combined' do
+    it 'records and impersonates multiple invocations of multiple methods combined' do
       test_impersonation do |impersonator|
         expect(impersonator.next).to eq(1)
         expect(impersonator.next).to eq(2)
@@ -28,12 +28,22 @@ describe 'Default method return impersonation', clear_recordings: true do
   end
 
   context 'with methods with arguments' do
-    it 'can record and impersonate invocations of methods with arguments' do
+    it 'records and impersonates invocations of methods with arguments' do
       test_impersonation do |impersonator|
         expect(impersonator.sum(1, 2)).to eq(3)
         expect(impersonator.sum(3, 4)).to eq(7)
       end
     end
+  end
+
+  context 'with methods yielding to blocks' do
+    it 'replays the yielded values' do
+      test_impersonation do |impersonator|
+        expect { |block| impersonator.sum(1, 2, &block) }.to yield_with_args(3)
+      end
+    end
+
+    pending 'replays yielding multiple times'
   end
 
   def test_impersonation(&block)

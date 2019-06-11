@@ -18,14 +18,21 @@ module Impersonator
     end
 
     def record(method, return_value)
-      method_invocaation = MethodInvocation.new(method: method, return_value: return_value)
-      @method_invocations << method_invocaation
+      method_invocation = MethodInvocation.new(method: method, return_value: return_value)
+
+      @method_invocations << method_invocation
     end
 
     def replay(method)
       method_invocation = @method_invocations.shift
       validate_method_signature!(method, method_invocation.method)
       raise Impersonator::Errors::MethodInvocationError, "Unexpected method invocation received: #{method}" unless method_invocation
+
+      block_spy = method_invocation.method.block_spy
+      if block_spy
+        return_value = method.block.call(*block_spy.arguments)
+        # @todo match return value!!
+      end
       method_invocation.return_value
     end
 
