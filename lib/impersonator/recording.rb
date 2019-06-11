@@ -6,8 +6,9 @@ module Impersonator
 
     attr_reader :label
 
-    def initialize(label)
+    def initialize(label, recordings_path:)
       @label = label
+      @recordings_path = recordings_path
     end
 
     def start
@@ -70,7 +71,7 @@ module Impersonator
     def start_in_record_mode
       logger.debug 'Recording mode'
       @replay_mode = false
-      make_sure_fixtures_dir_exists
+      make_sure_recordings_dir_exists
       @method_invocations = []
     end
 
@@ -88,10 +89,10 @@ module Impersonator
     end
 
     def file_path
-      "spec/recordings/#{label}.yml"
+      File.join(@recordings_path, "#{label}.yml")
     end
 
-    def make_sure_fixtures_dir_exists
+    def make_sure_recordings_dir_exists
       dirname = File.dirname(file_path)
       FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
     end
