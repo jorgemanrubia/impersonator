@@ -1,5 +1,5 @@
 describe 'Default method return impersonation', clear_recordings: true do
-  let(:real_object) { DummyCounter.new }
+  let(:real_calculator) { Test::Calculator.new }
 
   context 'with methods that return a simple value' do
     it 'can record and impersonate a method that return a simple value' do
@@ -30,44 +30,20 @@ describe 'Default method return impersonation', clear_recordings: true do
   pending 'raises an error when trying to impersonate without starting a recording'
   pending 'raises an error when the method to impersonate does not exist'
 
-  class DummyCounter
-    def initialize
-      @counter = 0
-    end
-
-    def invoked?
-      @invoked
-    end
-
-    def reset
-      @invoked = false
-    end
-
-    def next
-      @invoked = true
-      @counter += 1
-    end
-
-    def previous
-      @invoked = true
-      @counter -= 1
-    end
-  end
-
   def test_impersonation(&block)
     Impersonator.recording('simple value') do
-      impersonator = Impersonator.impersonate(real_object, :next, :previous)
+      impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
 
       block.call(impersonator)
-      expect(real_object).to be_invoked
+      expect(real_calculator).to be_invoked
     end
 
-    real_object.reset
+    real_calculator.reset
 
     Impersonator.recording('simple value') do
-      impersonator = Impersonator.impersonate(real_object, :next, :previous)
+      impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
       block.call(impersonator)
-      expect(real_object).not_to be_invoked
+      expect(real_calculator).not_to be_invoked
     end
   end
 end
