@@ -25,6 +25,7 @@ module Impersonator
     def replay(method)
       # todo: pending check signatures, etc...
       method_invocation = @method_invocations.shift
+      raise Impersonator::Errors::MethodInvocationError, "Unexpected method invocation received: #{method}" unless method_invocation
       method_invocation.return_value
     end
 

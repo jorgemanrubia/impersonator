@@ -29,7 +29,7 @@ module Impersonator
     attr_reader :recording, :impersonated_methods
 
     def validate_object_has_methods_to_impersonate!(object, methods_to_impersonate)
-      existing_methods = object.class.methods
+      existing_methods = object.methods
 
       missing_methods = methods_to_impersonate.find_all do |method|
         !existing_methods.include?(method.to_sym)
