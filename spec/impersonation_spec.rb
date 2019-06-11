@@ -1,7 +1,7 @@
 describe 'Default method return impersonation', clear_recordings: true do
   let(:real_calculator) { Test::Calculator.new }
 
-  context 'with methods that return a simple value' do
+  context 'with methods without arguments' do
     it 'can record and impersonate a method that return a simple value' do
       test_impersonation do |impersonator|
         expect(impersonator.next).to eq(1)
@@ -27,9 +27,18 @@ describe 'Default method return impersonation', clear_recordings: true do
     end
   end
 
+  context 'with methods with arguments' do
+    it 'can record and impersonate invocations of methods with arguments' do
+      test_impersonation do |impersonator|
+        expect(impersonator.sum(1, 2)).to eq(3)
+        expect(impersonator.sum(3, 4)).to eq(7)
+      end
+    end
+  end
+
   def test_impersonation(&block)
     Impersonator.recording('simple value') do
-      impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
+      impersonator = build_impersonator
 
       block.call(impersonator)
       expect(real_calculator).to be_invoked
@@ -38,9 +47,13 @@ describe 'Default method return impersonation', clear_recordings: true do
     real_calculator.reset
 
     Impersonator.recording('simple value') do
-      impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
+      impersonator = build_impersonator
       block.call(impersonator)
       expect(real_calculator).not_to be_invoked
     end
+  end
+
+  def build_impersonator
+    Impersonator.impersonate(real_calculator, :next, :previous, :sum)
   end
 end

@@ -14,13 +14,24 @@ module Test
     end
 
     def next
-      @invoked = true
+      invoked!
       @counter += 1
     end
 
     def previous
-      @invoked = true
+      invoked!
       @counter -= 1
+    end
+
+    def sum(number_1, number_2)
+      invoked!
+      number_1 + number_2
+    end
+
+    private
+
+    def invoked!
+      @invoked = true
     end
   end
 end
