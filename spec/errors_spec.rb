@@ -29,6 +29,20 @@ describe 'Error detection', clear_recordings: true do
         expect { impersonator.next }.to raise_error(Impersonator::Errors::MethodInvocationError)
       end
     end
+
+    it 'raises an error when invoking method with the wrong arguments in replay mode' do
+      Impersonator.recording('simple value') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum)
+        impersonator.sum(1, 2)
+      end
+
+      real_calculator.reset
+
+      Impersonator.recording('simple value') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum)
+        expect{ impersonator.sum(3, 4) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+      end
+    end
   end
 
 

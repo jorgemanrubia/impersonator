@@ -23,8 +23,8 @@ module Impersonator
     end
 
     def replay(method)
-      # todo: pending check signatures, etc...
       method_invocation = @method_invocations.shift
+      validate_method_signature!(method, method_invocation.method)
       raise Impersonator::Errors::MethodInvocationError, "Unexpected method invocation received: #{method}" unless method_invocation
       method_invocation.return_value
     end
@@ -79,6 +79,11 @@ module Impersonator
     def make_sure_fixtures_dir_exists
       dirname = File.dirname(file_path)
       FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
+    end
+
+    def validate_method_signature!(expected_method, actual_method)
+      raise Impersonator::Errors::MethodInvocationError, "Expecting method '#{expected_method}' but '#{actual_method}'"\
+                                                          " received" unless actual_method == expected_method
     end
   end
 end
