@@ -34,6 +34,27 @@ describe 'Default method return impersonation', clear_recordings: true do
         expect(impersonator.sum(3, 4)).to eq(7)
       end
     end
+
+    it 'can ignore arguments when matching methods' do
+      Impersonator.recording('test recording') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum)
+        impersonator.configure_method_matching_for(:sum) do |config|
+          config.ignore_arguments_at 0
+        end
+
+        expect(impersonator.sum(1, 2)).to eq(3)
+        expect(real_calculator).to be_invoked
+      end
+
+      real_calculator.reset
+
+      Impersonator.recording('test recording') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum)
+
+        expect(impersonator.sum(99999999, 2)).to eq(3)
+        expect(real_calculator).not_to be_invoked
+      end
+    end
   end
 
   context 'with methods yielding to blocks' do
