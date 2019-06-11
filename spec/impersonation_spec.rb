@@ -51,7 +51,7 @@ describe 'Default method return impersonation', clear_recordings: true do
   end
 
   def test_impersonation(&block)
-    Impersonator.recording('simple value') do
+    Impersonator.recording('test recording') do
       impersonator = build_impersonator
 
       block.call(impersonator)
@@ -60,7 +60,7 @@ describe 'Default method return impersonation', clear_recordings: true do
 
     real_calculator.reset
 
-    Impersonator.recording('simple value') do
+    Impersonator.recording('test recording') do
       impersonator = build_impersonator
       block.call(impersonator)
       expect(real_calculator).not_to be_invoked

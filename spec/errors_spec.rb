@@ -80,10 +80,6 @@ describe 'Error detection', clear_recordings: true do
     end
   end
 
-  describe Impersonator::Errors::BlockInvocationError do
-    pending 'block mismatches'
-  end
-
   it 'raises an error when there more recorded invocations that actual invocations' do
     Impersonator.recording('simple value') do
       impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
