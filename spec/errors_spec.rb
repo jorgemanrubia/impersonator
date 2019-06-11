@@ -62,6 +62,22 @@ describe 'Error detection', clear_recordings: true do
       end
     end
 
+    it 'raises an error when there is an invocation missing a block' do
+      Impersonator.recording('simple value') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum, :lineal_sequence)
+        impersonator.sum(1, 2, &block)
+        impersonator.sum(1, 2, &block)
+      end
+
+      real_calculator.reset
+
+      Impersonator.recording('simple value') do
+        impersonator = Impersonator.impersonate(real_calculator, :sum, :lineal_sequence)
+
+        impersonator.sum(1, 2, &block)
+        expect { impersonator.sum(1, 2) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+      end
+    end
   end
 
   describe Impersonator::Errors::BlockInvocationError do
