@@ -30,6 +30,9 @@ describe 'Default method return impersonation', clear_recordings: true do
   pending 'raises an error when trying to impersonate without starting a recording'
   pending 'raises an error when the method to impersonate does not exist'
 
+  pending 'raises an error when there is an invocation that is not recorded'
+  pending 'raises an error when there more recorded invocations that actual invocations'
+
   def test_impersonation(&block)
     Impersonator.recording('simple value') do
       impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
