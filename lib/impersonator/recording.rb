@@ -34,7 +34,7 @@ module Impersonator
       if record_mode?
         finish_in_record_mode
       else
-
+        finish_in_replay_mode
       end
     end
 
@@ -65,6 +65,11 @@ module Impersonator
       File.open(file_path, 'w') do |file|
         YAML.dump(@method_invocations, file)
       end
+    end
+
+    def finish_in_replay_mode
+      raise Impersonator::Errors::MethodInvocationError, "Expecting #{@method_invocations.length} method invocations"\
+                                                          " that didn't happen: #{@method_invocations.inspect}" unless @method_invocations.empty?
     end
 
     def file_path

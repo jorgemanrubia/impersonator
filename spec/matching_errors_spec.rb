@@ -32,6 +32,21 @@ describe 'Error detection', clear_recordings: true do
   end
 
 
-  pending 'raises an error when there more recorded invocations that actual invocations'
+  it 'raises an error when there more recorded invocations that actual invocations' do
+    Impersonator.recording('simple value') do
+      impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
+      impersonator.next
+      impersonator.next
+    end
 
+    real_calculator.reset
+
+    expect do
+      Impersonator.recording('simple value') do
+        impersonator = Impersonator.impersonate(real_calculator, :next, :previous)
+
+        impersonator.next
+      end
+    end.to raise_error(Impersonator::Errors::MethodInvocationError)
+  end
 end
