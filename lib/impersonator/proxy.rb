@@ -35,10 +35,8 @@ module Impersonator
     attr_reader :recording, :impersonated_methods, :method_matching_configurations_by_method
 
     def validate_object_has_methods_to_impersonate!(object, methods_to_impersonate)
-      existing_methods = object.methods
-
       missing_methods = methods_to_impersonate.find_all do |method|
-        !existing_methods.include?(method.to_sym)
+        !object.respond_to?(method.to_sym)
       end
 
       raise Impersonator::Errors::ConfigurationError, "These methods to impersonate does not exist: #{missing_methods.inspect}" unless missing_methods.empty?
