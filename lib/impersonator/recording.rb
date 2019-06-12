@@ -6,14 +6,15 @@ module Impersonator
 
     attr_reader :label
 
-    def initialize(label, recordings_path:)
+    def initialize(label, disabled: false, recordings_path:)
       @label = label
       @recordings_path = recordings_path
+      @disabled = disabled
     end
 
     def start
       logger.debug "Starting recording #{label}..."
-      if File.exist?(file_path)
+      if can_replay?
         start_in_replay_mode
       else
         start_in_record_mode
@@ -54,6 +55,10 @@ module Impersonator
     end
 
     private
+
+    def can_replay?
+      !@disabled && File.exist?(file_path)
+    end
 
     def replay_block(recorded_method_invocation, method_to_replay)
       block_spy = recorded_method_invocation.method_instance.block_spy

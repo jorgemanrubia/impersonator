@@ -1,4 +1,4 @@
-describe 'Error detection', clear_recordings: true do
+describe 'Impersonator.configure', clear_recordings: true do
   let(:real_calculator) { Test::Calculator.new }
 
   describe '#recordings_path' do
@@ -27,4 +27,5 @@ describe 'Error detection', clear_recordings: true do
 
     expect(File.exist?(expected_file_path)).to be_truthy
   end
+
 end

@@ -1,4 +1,4 @@
-describe 'Default method return impersonation', clear_recordings: true do
+describe 'Impersonation', clear_recordings: true do
   let(:real_calculator) { Test::Calculator.new }
 
   context 'with methods without arguments' do
@@ -67,6 +67,22 @@ describe 'Default method return impersonation', clear_recordings: true do
     it 'replays yielding multiple times' do
       test_impersonation do |impersonator|
         expect { |block| impersonator.lineal_sequence(3, &block) }.to yield_successive_args(1, 2, 3)
+      end
+    end
+  end
+
+  describe 'Configuration' do
+    it 'can disable replay mode' do
+      Impersonator.recording('test recording') do
+        build_impersonator.next
+        expect(real_calculator).to be_invoked
+      end
+
+      real_calculator.reset
+
+      Impersonator.recording('test recording', disabled: true) do
+        build_impersonator.next
+        expect(real_calculator).to be_invoked
       end
     end
   end

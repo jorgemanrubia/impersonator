@@ -1,7 +1,7 @@
 module Impersonator
   module Api
-    def recording(label, &block)
-      @current_recording = ::Impersonator::Recording.new(label, recordings_path: configuration.recordings_path)
+    def recording(label, disabled: false, &block)
+      @current_recording = ::Impersonator::Recording.new(label, disabled: disabled, recordings_path: configuration.recordings_path)
       @current_recording.start
       yield
     ensure
@@ -19,6 +19,12 @@ module Impersonator
 
     def configuration
       @configuration ||= Configuration.new
+    end
+
+    # Reset configuration and other global state
+    def reset
+      @current_recording = nil
+      @configuration = nil
     end
 
     def impersonate(object, *methods)
