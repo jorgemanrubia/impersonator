@@ -94,7 +94,11 @@ module Impersonator
     end
 
     def file_path
-      File.join(@recordings_path, "#{label}.yml")
+      File.join(@recordings_path, "#{label_as_file_name}.yml")
+    end
+
+    def label_as_file_name
+      label.downcase.gsub(/[\s \#:]/, '-')
     end
 
     def make_sure_recordings_dir_exists

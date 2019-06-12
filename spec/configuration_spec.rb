@@ -3,11 +3,11 @@ describe 'Impersonator.configure', clear_recordings: true do
 
   describe '#recordings_path' do
     it 'defaults to spec/recordings' do
-      validate_generates_fixture('spec/recordings/test recording.yml')
+      validate_generates_fixture('spec/recordings/test-recording.yml')
     end
 
     it 'can change the place where recordings are generated' do
-      validate_generates_fixture('spec/recordings/myfolder/test recording.yml') do
+      validate_generates_fixture('spec/recordings/myfolder/test-recording.yml') do
         Impersonator.configure do |config|
           config.recordings_path = 'spec/recordings/myfolder'
         end
