@@ -1,4 +1,4 @@
-describe 'Impersonation', clear_recordings: true do
+describe 'Impersonate', clear_recordings: true do
   let(:real_calculator) { Test::Calculator.new }
 
   context 'with methods without arguments' do
