@@ -98,7 +98,7 @@ module Impersonator
     end
 
     def label_as_file_name
-      label.downcase.gsub(/[\s \#:]/, '-').gsub(/[\-]+/, '-')
+      label.downcase.gsub(/[\<\>\(\)\s \#:]/, '-').gsub(/[\-]+/, '-')
     end
 
     def make_sure_recordings_dir_exists
@@ -108,8 +108,12 @@ module Impersonator
 
     def validate_method_signature!(expected_method, actual_method)
       unless actual_method == expected_method
-        raise Impersonator::Errors::MethodInvocationError, "Expecting method '#{expected_method}' but '#{actual_method}'"\
-                                                            ' received'
+        raise Impersonator::Errors::MethodInvocationError, <<~ERROR
+          Expecting:
+            #{expected_method}
+          But received:
+            #{actual_method}
+        ERROR
       end
     end
   end
