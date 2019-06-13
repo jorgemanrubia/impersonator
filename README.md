@@ -40,18 +40,19 @@ class Calculator
 end
 
 real_calculator = Calculator.new
-impersonated_calculator = Impersonator.impersonate(real_calculator, :sum)
 
 # The first time it records...
 Impersonator.recording('calculator sum') do
+  impersonated_calculator = Impersonator.impersonate(real_calculator, :sum)
   impersonated_calculator.sum(2, 3) # 5
   real_calculator.invoked? # true
 end
 
 # The next time it replays...
 Impersonator.recording('calculator sum') do
+  impersonated_calculator = Impersonator.impersonate(real_calculator, :sum)
   impersonated_calculator.sum(2, 3) # 5
-  real_calculator.invoked? # false
+  real_calculator.invoked? # true
 end
 ```
 
