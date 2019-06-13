@@ -9,7 +9,7 @@ Impersonator comes to the rescue. Given any object and a list of methods to impe
 - The first time each method is invoked, it will record its invocations, including passed arguments, return values and yielded values. This is known as *record mode*.
 - The next times, it will reproduce the recorded values and will validate that the method was invoked with the same arguments, in certain order and the exact number of times. This is known as *replay mode*.
 
-Impersonator only focus on validating invocation signature and reproducing return values, which is perfect for many services. For this reason, it won't work for services that trigger additional logic that is relevant to the test (e.g: if the method sends an email, the impersonated method won't send it). 
+Impersonator only focus on validating invocation signature and reproducing return values, which is perfect for many services. It won't work for services that trigger additional logic that is relevant to the test (e.g: if the method sends an email, the impersonated method won't send it). 
 
 Familiar with [VCR](https://github.com/vcr/vcr)? Impersonator is like VCR but for ruby objects instead of HTTP.
 
