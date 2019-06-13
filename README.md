@@ -89,7 +89,7 @@ Impersonated methods will record and replay:
 - Return values
 - Yielded values
 
-### Impersonate the object (generate double)
+### Impersonate the object
 
 Sometimes, creating an object is not viable at test time. For these cases, you can use `Impersonate#impersonate_double`. It will take a list of methods to impersonate and a block responsible of instantiating the object in record mode. In replay mode, it will generate a double on the fly that only respond to the list of methods to impersonate.
 
