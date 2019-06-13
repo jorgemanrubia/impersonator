@@ -103,13 +103,11 @@ In this case, `Calculator.new` will not be executed in replay mode. But the gene
 
 ### Recordings path
 
-
-
 ### Ignore arguments
 
-### Configuring attributes to record
-
 ### Disabling
+
+### Configuring attributes to serialize
 
 ### Rspec configuration
 
