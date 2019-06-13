@@ -62,13 +62,15 @@ Typically you will use `impersonate` for testing, so this is how your test will 
 ...
 def setup
   real_calculator = Calculator.new
-  @calculator = Impersonator.impersonate(real_calculator, :sum)
-end  
+end
 
 # The second time the test runs, impersonator will replay the
 # recorded results
 test 'sums the numbers' do
-  assert_equal 5, @calculator.sum(2, 3)
+  Impersonator.recording('calculator sum') do
+    @calculator = Impersonator.impersonate(real_calculator, :sum)
+    assert_equal 5, @calculator.sum(2, 3)
+  end
 end  
 ...
 ```
