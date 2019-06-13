@@ -67,7 +67,7 @@ end
 # The second time the test runs, impersonator will replay the
 # recorded results
 test 'sums the numbers' do
-  assert_equal 4,   @calculator.sum(2, 3)
+  assert_equal 5, @calculator.sum(2, 3)
 end  
 ...
 ```
