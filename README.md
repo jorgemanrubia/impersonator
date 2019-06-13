@@ -29,13 +29,13 @@ And then execute:
 
 ```ruby
 class Calculator
-  def invoked?
-    @invoked
-  end
-
   def sum(number_1, number_2)
     @invoked = true
     number_1 + number_2
+  end
+  
+  def invoked?
+    @invoked
   end
 end
 
