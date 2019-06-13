@@ -113,7 +113,7 @@ In this case, `Calculator.new` will not be executed in replay mode. But the gene
 
 ## Thanks
 
-- This library was heavily inspired by [VCR](https://github.com/vcr/vcr). A solution that blown my mind years ago and that has been in my toolbox since then.
+- This library was heavily inspired by [VCR](https://github.com/vcr/vcr). A gem that blown my mind years ago and that has been in my toolbox since then.
 
 ## Contributing
 
