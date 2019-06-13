@@ -72,7 +72,7 @@ end
 ...
 ```
 
-### Only impersonate certain methods
+### Impersonate certain methods only
 
 Use `Impersonator#impersonate` to impersonate certain methods. At replay time, the impersonated object will delegate to the real objects all the methods except the impersonated ones. 
 
