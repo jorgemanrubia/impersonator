@@ -167,7 +167,7 @@ class MyClass
     self.name = coder['name']
   end
 
-  def encode_with coder
+  def encode_with(coder)
     coder['name'] = name
   end
 end
