@@ -157,7 +157,7 @@ This will effectively force record mode in all times. It will save the recording
 
 `Impersonator` relies on Ruby standard `YAML` library for serializing/deserializing data. It works with simple attributes, arrays, hashes and objects which attributes are serializable in a recurring way. This means that you don't have to care when interchanging value objects, which is a common scenario when impersonating RPC-like clients.
 
-However, there are some types, like `Proc`, anonymous classes  or `File`, that will make the serialization process fail. You can customize which attributes are serialized by overridding `init_with` and `encode_with` in the class you want to serialize. You will typically exclude the problematic attributes by including only the compatible ones.
+However, there are some types, like `Proc`, anonymous classes  or `IO` classes like `File`, that will make the serialization process fail. You can customize which attributes are serialized by overridding `init_with` and `encode_with` in the class you want to serialize. You will typically exclude the problematic attributes by including only the compatible ones.
 
 ```ruby
 class MyClass
@@ -187,7 +187,7 @@ RSpec.configure do |config|
 end
 ```
 
-Now you can just tag your tests with `impersonator` and an implicit recording will be available automatically, so you don't have to invoke `Impersonator.recording` anymore.
+Now you can just tag your tests with `impersonator` and an implicit recording named after the example will be available automatically, so you don't have to invoke `Impersonator.recording` anymore.
 
 ```ruby
 describe Calculator, impersonator: do
