@@ -2,14 +2,14 @@
 
 Impersonator is a Ruby library to record and replay object interactions. 
 
-When testing, you often find services that are expensive to invoke and you need to use a [double](https://martinfowler.com/bliki/TestDouble.html) instead. Creating stubs and mocks for simple scenarios is easy but, for complex interactions, things get messy fast. Stubbing elaborated canned response and mocking multiple expectations quickly degenerates in brittle tests that are hard to write and maintain.
+When testing, you often find services that are expensive to invoke and you need to use a [double](https://martinfowler.com/bliki/TestDouble.html) instead. Creating stubs and mocks for simple scenarios is easy but, for complex interactions, things get messy fast. Stubbing elaborated canned response and orchestrating multiple expectations quickly degenerates in brittle tests that are hard to write and maintain.
 
 Impersonator comes to the rescue. Given any object and a list of methods to impersonate:
 
 - The first time each method is invoked, it will record its invocations, including passed arguments, return values and yielded values. This is known as *record mode*.
 - The next times, it will reproduce the recorded values and will validate that the method was invoked with the same arguments, in certain order and the exact number of times. This is known as *replay mode*.
 
-Impersonator only focus on validating invocation signature and reproducing return values, which is perfect for many services. It won't work for services that trigger additional logic that is relevant to the test (e.g: if the method sends an email, the impersonated method won't send it). 
+Impersonator only focus on validating invocation signature and reproducing output values, which is perfect for many services. It won't work for services that trigger additional logic that is relevant to the test (e.g: if the method sends an email, the impersonated method won't send it). 
 
 Familiar with [VCR](https://github.com/vcr/vcr)? Impersonator is like VCR but for ruby objects instead of HTTP.
 
@@ -52,7 +52,7 @@ end
 Impersonator.recording('calculator sum') do
   impersonated_calculator = Impersonator.impersonate(real_calculator, :sum)
   impersonated_calculator.sum(2, 3) # 5
-  real_calculator.invoked? # true
+  real_calculator.invoked? # false
 end
 ```
 
