@@ -92,7 +92,7 @@ Impersonated methods will record and replay:
 - Return values
 - Yielded values
 
-### Impersonate the object
+### Impersonate the whole object
 
 Sometimes, creating an object is not viable at test time. For these cases, you can use `Impersonate#impersonate_double`. It will take a list of methods to impersonate and a block responsible of instantiating the object in record mode. In replay mode, it will generate a double on the fly that only respond to the list of methods to impersonate.
 
@@ -106,13 +106,97 @@ In this case, `Calculator.new` will not be executed in replay mode. But the gene
 
 ### Recordings path
 
+`Impersonator` works by recording method invocations in `YAML` format. By default, recordings are saved in:
+
+- `test/recordings` if a `test` folder is present in the project
+- `spec/recordings` if a `spec` folder is present in the project
+
+You can configure this path with:
+
+```ruby
+Impersonator.configure do |config|
+	config.recordings_path = 'my/own/recording/path'
+end
+```
+
 ### Ignore arguments when matching methods
+
+By default, to determine if a method invocation was right, the list of arguments will be matched with `==`. You can configure how this work by providing a list of argument indexes to ignore.
+
+```ruby
+impersonator = Impersonator.impersonate(real_calculator, :sum)
+impersonator.configure_method_matching_for(:sum) do |config|
+	config.ignore_arguments_at 0
+end
+
+# now the first parameter of #sum will be ignored:
+#
+# in record mode:
+impersonator.sum(1, 2) # 3
+
+# in replay mode
+impersonator.sum(9999, 2) # will still return 3 and won't fail because the first argument is ignored
+
+
+```
 
 ### Disabling
 
+You can disable `impersonator` by passing `disable: true` to `Impersonator.recording`:
+
+```ruby
+Impersonator.recording('test recording', disabled: true) do
+...
+end
+```
+
+This will effectively force record mode in all times. It will save the recordings but it will never use them.
+
 ### Configuring attributes to serialize
 
-### Rspec configuration
+`Impersonator` relies on Ruby standard `YAML` library for serializing/deserializing data. It works with simple attributes, arrays, hashes and objects which attributes are serializable in a recurring way. This means that you don't have to care when interchanging value objects, which is a common scenario when impersonating RPC-like clients.
+
+However, there are some types, like `Proc`, anonymous classes  or `File`, that will make the serialization process fail. You can customize which attributes are serialized by overridding `init_with` and `encode_with` in the class you want to serialize. You will typically exclude the problematic attributes by including only the compatible ones.
+
+```ruby
+class MyClass
+  ...
+  
+  def init_with(coder)
+    self.name = coder['name']
+  end
+
+  def encode_with coder
+    coder['name'] = name
+  end
+end
+```
+
+### RSpec configuration
+
+`Impersonator` is test-framework agnostic. If you are using [RSpec](https://rspec.info), you can configure an `around` hook that will start a recording session automatically for each example that has a `impersonator` tag:
+
+```ruby
+RSpec.configure do |config|
+  config.around(:example, :impersonator) do |example|
+    Impersonator.recording(example.full_description) do
+      example.run
+    end
+  end
+end
+```
+
+Now you can just tag your tests with `impersonator` and an implicit recording will be available automatically, so you don't have to invoke `Impersonator.recording` anymore.
+
+```ruby
+describe Calculator, impersonator: do
+  it 'sums numbers' do
+	# there is an implicit recording stored in 'calculator-sums-	numbers.yaml'
+	impersonator = Impersonator.impersonate(real_calculator, :sum)
+	expect(impersonator.sum(1, 2)).to eq(3)
+  end
+end
+```
 
 ## Thanks
 
