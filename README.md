@@ -141,7 +141,7 @@ impersonator.sum(1, 2) # 3
 impersonator.sum(9999, 2) # will still return 3 and won't fail because the first argument is ignored
 ```
 
-### Disabling
+### Disabling record mode
 
 You can disable `impersonator` by passing `disable: true` to `Impersonator.recording`:
 
@@ -151,7 +151,7 @@ Impersonator.recording('test recording', disabled: true) do
 end
 ```
 
-This will effectively force record mode in all times. It will save the recordings but it will never use them.
+This will effectively force record mode in all times. This is handy while you are figuring out how interactions with the mocked service go. It will save the recordings but it will never use them.
 
 ### Configuring attributes to serialize
 
