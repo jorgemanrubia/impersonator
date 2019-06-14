@@ -100,7 +100,7 @@ Sometimes, creating an object is not viable at test time. For these cases, you c
 impersonator = Impersonator.impersonate_double(:sum) { Calculator.new }
 ```
 
-In this case, `Calculator.new` will not be executed in replay mode. But the generated double will only respond to `sum`.
+In this case, `Calculator.new` will not be executed in replay mode. But the generated double will only implement `sum`.
 
 ## Configuration
 
