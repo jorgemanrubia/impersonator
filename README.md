@@ -94,7 +94,7 @@ Impersonated methods will record and replay:
 
 ### Impersonate the whole object
 
-Sometimes, creating an object is not viable at test time. For these cases, you can use `Impersonate#impersonate_double`. It will take a list of methods to impersonate and a block responsible of instantiating the object in record mode. In replay mode, it will generate a double on the fly that only responds to the list of methods to impersonate.
+Sometimes, creating the real object is not viable at record time. For these cases, you can use `Impersonate#impersonate_double`. It will take a list of methods to impersonate and a block responsible of instantiating the object in record mode. In replay mode, it will generate a double on the fly that only responds to the list of methods to impersonate.
 
 ```ruby
 impersonator = Impersonator.impersonate_double(:sum) { Calculator.new }
