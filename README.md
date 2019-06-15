@@ -30,29 +30,21 @@ And then execute:
 ```ruby
 class Calculator
   def sum(number_1, number_2)
-    @invoked = true
     number_1 + number_2
   end
-
-  def invoked?
-    @invoked
-  end
 end
-
-actual_calculator = Calculator.new
 
 # The first time it records...
 Impersonator.recording('calculator sum') do
-  impersonated_calculator = Impersonator.impersonate(actual_calculator, :sum)
-  impersonated_calculator.sum(2, 3) # 5
-  actual_calculator.invoked? # true
+  impersonated_calculator = Impersonator.impersonate(:sum) { Calculator.new }
+  puts impersonated_calculator.sum(2, 3) # 5
 end
 
-# The next time it replays...
+# The next time it replays
+Object.send :remove_const, :Calculator # Calculator does not even have to exist now
 Impersonator.recording('calculator sum') do
-  impersonated_calculator = Impersonator.impersonate(actual_calculator, :sum)
-  impersonated_calculator.sum(2, 3) # 5
-  actual_calculator.invoked? # false
+  impersonated_calculator = Impersonator.impersonate(:sum) { Calculator.new }
+  puts impersonated_calculator.sum(2, 3) # 5
 end
 ```
 
