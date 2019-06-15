@@ -27,25 +27,30 @@ module Impersonator
       @configuration = nil
     end
 
-    def impersonate(object, *methods)
-      raise Impersonator::Errors::ConfigurationError, 'You must start a recording to impersonate objects. Use Impersonator.recording {}' unless @current_recording
-      ::Impersonator::Proxy.new(object, recording: current_recording, impersonated_methods: methods)
+    def impersonate(*arguments, &block)
+      if block_given?
+        impersonate_object(*arguments, &block)
+      else
+        object, *methods = arguments
+        impersonate_methods(object, *methods)
+      end
     end
 
-    # This method is useful when dealing with objects that are expensive to instantiate
-    #
-    # * When in record mode, it will use the passed block to instantiate the object to impersonate
-    # * When in replay mode, it will generate a double on the fly that responds to the provided methods
-    def impersonate_double(*methods)
+    private
+
+    def impersonate_object(*methods)
       object_to_impersonate = if current_recording&.record_mode?
                                 yield
                               else
                                 generate_double(methods)
                               end
-      impersonate(object_to_impersonate, *methods)
+      impersonate_methods(object_to_impersonate, *methods)
     end
 
-    private
+    def impersonate_methods(object, *methods)
+      raise Impersonator::Errors::ConfigurationError, 'You must start a recording to impersonate objects. Use Impersonator.recording {}' unless @current_recording
+      ::Impersonator::Proxy.new(object, recording: current_recording, impersonated_methods: methods)
+    end
 
     def generate_double(methods)
       double_class = Class.new do
