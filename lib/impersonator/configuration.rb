@@ -10,7 +10,7 @@ module Impersonator
     private
 
     def detect_default_recordings_path
-      base_path = File.exists?('test') ? 'test' : 'spec'
+      base_path = File.exists?('spec') ? 'spec' : 'test'
       File.join(base_path, DEFAULT_RECORDINGS_FOLDER)
     end
   end
