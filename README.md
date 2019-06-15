@@ -27,6 +27,15 @@ And then execute:
 
 ## Usage
 
+Use `Impersonator.impersonate` passing in a list of methods to impersonate and a block that will instantiate the object at record time:
+
+```ruby
+Impersonator.impersonate(:sum, :divide) { Calculator.new }
+```
+
+* At record time, `Calculator` will be instantiated and their methods invoked normally, recording the returned values (and yielded values if any).
+* At replay time, `Calcualtor` won't be instantiated. Instead, a double object will be generated on the fly that will replay the recorded values.
+
 ```ruby
 class Calculator
   def sum(number_1, number_2)
@@ -51,25 +60,25 @@ end
 Typically you will use `impersonate` for testing, so this is how your test will look:
 
 ```ruby
-...
-def setup
-  actual_calculator = Calculator.new
-end
-
 # The second time the test runs, impersonator will replay the
 # recorded results
 test 'sums the numbers' do
   Impersonator.recording('calculator sum') do
-    @calculator = Impersonator.impersonate(actual_calculator, :sum)
-    assert_equal 5, @calculator.sum(2, 3)
+    calculator = Impersonator.impersonate(:sum){ Calculator.new }
+    assert_equal 5, calculator.sum(2, 3)
   end
 end
-...
 ```
+
+Impersonated methods will record and replay:
+
+- Arguments
+- Return values
+- Yielded values
 
 ### Impersonate certain methods only
 
-Use `Impersonator#impersonate` to impersonate certain methods. At replay time, the impersonated object will delegate to the real objects all the methods except the impersonated ones. 
+Use `Impersonator#impersonate_methods` to impersonate certain methods only. At replay time, the impersonated object will delegate to the actual object all the methods except the impersonated ones. 
 
 ```ruby
 actual_calculator = Calculator.new
@@ -78,30 +87,14 @@ impersonator = Impersonator.impersonate(actual_calculator, :sum)
 
 In this case, in replay mode, `Calculator` gets instantiated normally and any method other than `#sum`  will be delegated to `actual_calculator`.
 
-Impersonated methods will record and replay:
-
-- Arguments
-- Return values
-- Yielded values
-
-### Impersonate the whole object
-
-Sometimes, creating the real object is not viable at replay time. For these cases, you can use `Impersonate#impersonate_double`. It will take a list of methods to impersonate and a block responsible of instantiating the object in record mode. In replay mode, it will generate a double on the fly that only responds to the list of methods to impersonate.
-
-```ruby
-impersonator = Impersonator.impersonate_double(:sum) { Calculator.new }
-```
-
-In this case, `Calculator.new` will not be executed in replay mode. But the generated double will only implement `sum`.
-
 ## Configuration
 
 ### Recordings path
 
 `Impersonator` works by recording method invocations in `YAML` format. By default, recordings are saved in:
 
-- `test/recordings` if a `test` folder is present in the project
 - `spec/recordings` if a `spec` folder is present in the project
+- `test/recordings` otherwise
 
 You can configure this path with:
 
