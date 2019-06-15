@@ -5,7 +5,7 @@ describe 'Error detection', clear_recordings: true do
   it 'does not generate recordings when an error is raised' do
     begin
       Impersonator.recording('error-recording') do
-        Impersonator.impersonate_methods(actual_calculator, :sum)
+        Impersonator.impersonate_methods(actual_calculator, :add)
         raise "Some error"
       end
     rescue StandardError
@@ -45,49 +45,49 @@ describe 'Error detection', clear_recordings: true do
 
     it 'raises an error when invoking method with the wrong arguments in replay mode' do
       Impersonator.recording('simple value') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum)
-        impersonator.sum(1, 2)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add)
+        impersonator.add(1, 2)
       end
 
       actual_calculator.reset
 
       Impersonator.recording('simple value') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum)
-        expect { impersonator.sum(3, 4) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add)
+        expect { impersonator.add(3, 4) }.to raise_error(Impersonator::Errors::MethodInvocationError)
       end
     end
 
     it 'raises an error when there is an invocation with a not expected a block' do
       Impersonator.recording('simple value') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum, :lineal_sequence)
-        impersonator.sum(1, 2, &block)
-        impersonator.sum(1, 2)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add, :lineal_sequence)
+        impersonator.add(1, 2, &block)
+        impersonator.add(1, 2)
       end
 
       actual_calculator.reset
 
       Impersonator.recording('simple value') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum, :lineal_sequence)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add, :lineal_sequence)
 
-        impersonator.sum(1, 2, &block)
-        expect { impersonator.sum(1, 2, &block) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+        impersonator.add(1, 2, &block)
+        expect { impersonator.add(1, 2, &block) }.to raise_error(Impersonator::Errors::MethodInvocationError)
       end
     end
 
     it 'raises an error when there is an invocation missing a block' do
       Impersonator.recording('simple value') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum, :lineal_sequence)
-        impersonator.sum(1, 2, &block)
-        impersonator.sum(1, 2, &block)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add, :lineal_sequence)
+        impersonator.add(1, 2, &block)
+        impersonator.add(1, 2, &block)
       end
 
       actual_calculator.reset
 
       Impersonator.recording('simple value') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum, :lineal_sequence)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add, :lineal_sequence)
 
-        impersonator.sum(1, 2, &block)
-        expect { impersonator.sum(1, 2) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+        impersonator.add(1, 2, &block)
+        expect { impersonator.add(1, 2) }.to raise_error(Impersonator::Errors::MethodInvocationError)
       end
     end
   end
@@ -108,5 +108,28 @@ describe 'Error detection', clear_recordings: true do
         impersonator.next
       end
     end.to raise_error(Impersonator::Errors::MethodInvocationError)
+  end
+end
+
+describe 'dummy' do
+  it 'test me' do
+    class Calculator
+      def add(number_1, number_2)
+        number_1 + number_2
+      end
+    end
+
+# The first time it records...
+    Impersonator.recording('calculator add') do
+      impersonated_calculator = Impersonator.impersonate(:add) { Calculator.new }
+      puts impersonated_calculator.add(2, 3) # 5
+    end
+
+    # The next time it replays
+    Object.send :remove_const, :Calculator # Calculator does not even have to exist now
+    Impersonator.recording('calculator add') do
+      impersonated_calculator = Impersonator.impersonate(:add) { Calculator.new }
+      puts impersonated_calculator.add(2, 3) # 5
+    end
   end
 end

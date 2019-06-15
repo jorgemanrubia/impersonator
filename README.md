@@ -30,7 +30,7 @@ And then execute:
 Use `Impersonator.impersonate` passing in a list of methods to impersonate and a block that will instantiate the object at record time:
 
 ```ruby
-Impersonator.impersonate(:sum, :divide) { Calculator.new }
+Impersonator.impersonate(:add, :divide) { Calculator.new }
 ```
 
 * At record time, `Calculator` will be instantiated and their methods invoked normally, recording the returned values (and yielded values if any).
@@ -38,22 +38,22 @@ Impersonator.impersonate(:sum, :divide) { Calculator.new }
 
 ```ruby
 class Calculator
-  def sum(number_1, number_2)
+  def add(number_1, number_2)
     number_1 + number_2
   end
 end
 
 # The first time it records...
-Impersonator.recording('calculator sum') do
-  impersonated_calculator = Impersonator.impersonate(:sum) { Calculator.new }
-  puts impersonated_calculator.sum(2, 3) # 5
+Impersonator.recording('calculator add') do
+  impersonated_calculator = Impersonator.impersonate(:add) { Calculator.new }
+  puts impersonated_calculator.add(2, 3) # 5
 end
 
 # The next time it replays
 Object.send :remove_const, :Calculator # Calculator does not even have to exist now
-Impersonator.recording('calculator sum') do
-  impersonated_calculator = Impersonator.impersonate(:sum) { Calculator.new }
-  puts impersonated_calculator.sum(2, 3) # 5
+Impersonator.recording('calculator add') do
+  impersonated_calculator = Impersonator.impersonate(:add) { Calculator.new }
+  puts impersonated_calculator.add(2, 3) # 5
 end
 ```
 
@@ -63,9 +63,9 @@ Typically you will use `impersonate` for testing, so this is how your test will 
 # The second time the test runs, impersonator will replay the
 # recorded results
 test 'sums the numbers' do
-  Impersonator.recording('calculator sum') do
-    calculator = Impersonator.impersonate(:sum){ Calculator.new }
-    assert_equal 5, calculator.sum(2, 3)
+  Impersonator.recording('calculator add') do
+    calculator = Impersonator.impersonate(:add){ Calculator.new }
+    assert_equal 5, calculator.add(2, 3)
   end
 end
 ```
@@ -82,10 +82,10 @@ Use `Impersonator#impersonate_methods` to impersonate certain methods only. At r
 
 ```ruby
 actual_calculator = Calculator.new
-impersonator = Impersonator.impersonate(actual_calculator, :sum)
+impersonator = Impersonator.impersonate(actual_calculator, :add)
 ```
 
-In this case, in replay mode, `Calculator` gets instantiated normally and any method other than `#sum`  will be delegated to `actual_calculator`.
+In this case, in replay mode, `Calculator` gets instantiated normally and any method other than `#add`  will be delegated to `actual_calculator`.
 
 ## Configuration
 
@@ -112,18 +112,18 @@ By default, to determine if a method invocation was right, the list of arguments
 Impersonator.recording('test recording', disabled: true) do
   # ...
 end
-impersonator = Impersonator.impersonate(actual_calculator, :sum)
-impersonator.configure_method_matching_for(:sum) do |config|
+impersonator = Impersonator.impersonate(actual_calculator, :add)
+impersonator.configure_method_matching_for(:add) do |config|
   config.ignore_arguments_at 0
 end
 
-# Now the first parameter of #sum will be ignored.
+# Now the first parameter of #add will be ignored.
 #
 # In record mode:
-impersonator.sum(1, 2) # 3
+impersonator.add(1, 2) # 3
 
 # In replay mode
-impersonator.sum(9999, 2) # will still return 3 and won't fail because the first argument is ignored
+impersonator.add(9999, 2) # will still return 3 and won't fail because the first argument is ignored
 ```
 
 ### Disabling record mode
@@ -178,8 +178,8 @@ Now you can just tag your tests with `impersonator` and an implicit recording na
 describe Calculator, impersonator: do
   it 'sums numbers' do
     # there is an implicit recording stored in 'calculator-sums-	numbers.yaml'
-    impersonator = Impersonator.impersonate(actual_calculator, :sum)
-    expect(impersonator.sum(1, 2)).to eq(3)
+    impersonator = Impersonator.impersonate(actual_calculator, :add)
+    expect(impersonator.add(1, 2)).to eq(3)
   end
 end
 ```

@@ -23,7 +23,7 @@ module Test
       @counter -= 1
     end
 
-    def sum(number_1, number_2)
+    def add(number_1, number_2)
       invoked!
       result = number_1 + number_2
       if block_given?

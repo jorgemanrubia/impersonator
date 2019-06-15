@@ -30,28 +30,28 @@ describe 'Impersonate', clear_recordings: true do
   context 'with methods with arguments' do
     it 'records and impersonates invocations of methods with arguments' do
       test_impersonation do |impersonator|
-        expect(impersonator.sum(1, 2)).to eq(3)
-        expect(impersonator.sum(3, 4)).to eq(7)
+        expect(impersonator.add(1, 2)).to eq(3)
+        expect(impersonator.add(3, 4)).to eq(7)
       end
     end
 
     it 'can ignore arguments when matching methods' do
       Impersonator.recording('test recording') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum)
-        impersonator.configure_method_matching_for(:sum) do |config|
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add)
+        impersonator.configure_method_matching_for(:add) do |config|
           config.ignore_arguments_at 0
         end
 
-        expect(impersonator.sum(1, 2)).to eq(3)
+        expect(impersonator.add(1, 2)).to eq(3)
         expect(actual_calculator).to be_invoked
       end
 
       actual_calculator.reset
 
       Impersonator.recording('test recording') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :add)
 
-        expect(impersonator.sum(99999999, 2)).to eq(3)
+        expect(impersonator.add(99999999, 2)).to eq(3)
         expect(actual_calculator).not_to be_invoked
       end
     end
@@ -60,7 +60,7 @@ describe 'Impersonate', clear_recordings: true do
   context 'with methods yielding to blocks' do
     it 'replays the yielded values' do
       test_impersonation do |impersonator|
-        expect { |block| impersonator.sum(1, 2, &block) }.to yield_with_args(3)
+        expect { |block| impersonator.add(1, 2, &block) }.to yield_with_args(3)
       end
     end
 
@@ -105,6 +105,6 @@ describe 'Impersonate', clear_recordings: true do
   end
 
   def build_impersonator
-    Impersonator.impersonate_methods(actual_calculator, :next, :previous, :sum, :lineal_sequence)
+    Impersonator.impersonate_methods(actual_calculator, :next, :previous, :add, :lineal_sequence)
   end
 end
