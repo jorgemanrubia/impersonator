@@ -1,5 +1,5 @@
 describe 'Impersonate', clear_recordings: true do
-  let(:real_calculator) { Test::Calculator.new }
+  let(:actual_calculator) { Test::Calculator.new }
 
   context 'with methods without arguments' do
     it 'records and impersonates a method that return a simple value' do
@@ -37,22 +37,22 @@ describe 'Impersonate', clear_recordings: true do
 
     it 'can ignore arguments when matching methods' do
       Impersonator.recording('test recording') do
-        impersonator = Impersonator.impersonate(real_calculator, :sum)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum)
         impersonator.configure_method_matching_for(:sum) do |config|
           config.ignore_arguments_at 0
         end
 
         expect(impersonator.sum(1, 2)).to eq(3)
-        expect(real_calculator).to be_invoked
+        expect(actual_calculator).to be_invoked
       end
 
-      real_calculator.reset
+      actual_calculator.reset
 
       Impersonator.recording('test recording') do
-        impersonator = Impersonator.impersonate(real_calculator, :sum)
+        impersonator = Impersonator.impersonate_methods(actual_calculator, :sum)
 
         expect(impersonator.sum(99999999, 2)).to eq(3)
-        expect(real_calculator).not_to be_invoked
+        expect(actual_calculator).not_to be_invoked
       end
     end
   end
@@ -75,14 +75,14 @@ describe 'Impersonate', clear_recordings: true do
     it 'can disable replay mode' do
       Impersonator.recording('test recording') do
         build_impersonator.next
-        expect(real_calculator).to be_invoked
+        expect(actual_calculator).to be_invoked
       end
 
-      real_calculator.reset
+      actual_calculator.reset
 
       Impersonator.recording('test recording', disabled: true) do
         build_impersonator.next
-        expect(real_calculator).to be_invoked
+        expect(actual_calculator).to be_invoked
       end
     end
   end
@@ -92,19 +92,19 @@ describe 'Impersonate', clear_recordings: true do
       impersonator = build_impersonator
 
       block.call(impersonator)
-      expect(real_calculator).to be_invoked
+      expect(actual_calculator).to be_invoked
     end
 
-    real_calculator.reset
+    actual_calculator.reset
 
     Impersonator.recording('test recording') do
       impersonator = build_impersonator
       block.call(impersonator)
-      expect(real_calculator).not_to be_invoked
+      expect(actual_calculator).not_to be_invoked
     end
   end
 
   def build_impersonator
-    Impersonator.impersonate(real_calculator, :next, :previous, :sum, :lineal_sequence)
+    Impersonator.impersonate_methods(actual_calculator, :next, :previous, :sum, :lineal_sequence)
   end
 end

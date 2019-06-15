@@ -1,5 +1,5 @@
 describe 'Impersonator.configure', clear_recordings: true do
-  let(:real_calculator) { Test::Calculator.new }
+  let(:actual_calculator) { Test::Calculator.new }
 
   describe '#recordings_path' do
     it 'defaults to spec/recordings' do
@@ -20,9 +20,9 @@ describe 'Impersonator.configure', clear_recordings: true do
     yield if block_given?
 
     Impersonator.recording('test recording') do
-      impersonator = Impersonator.impersonate(real_calculator, :next)
+      impersonator = Impersonator.impersonate_methods(actual_calculator, :next)
       impersonator.next
-      expect(real_calculator).to be_invoked
+      expect(actual_calculator).to be_invoked
     end
 
     expect(File.exist?(expected_file_path)).to be_truthy

@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
 describe 'Impersonate double', clear_recordings: true do
-  let(:real_calculator) { Test::Calculator.new }
+  let(:actual_calculator) { Test::Calculator.new }
 
   it "doesn't use the real object in recording mode" do
     Impersonator.recording('test double recording') do
-      impersonator = Impersonator.impersonate(:next) { real_calculator }
+      impersonator = Impersonator.impersonate(:next) { actual_calculator }
 
       expect(impersonator.next).to eq(1)
-      expect(real_calculator).to be_invoked
+      expect(actual_calculator).to be_invoked
     end
 
-    real_calculator.reset
+    actual_calculator.reset
 
     Impersonator.recording('test double recording') do
       impersonator = Impersonator.impersonate(:next) { raise 'This should never be invoked' }
 
       expect(impersonator.next).to eq(1)
-      expect(real_calculator).not_to be_invoked
+      expect(actual_calculator).not_to be_invoked
     end
   end
 end
