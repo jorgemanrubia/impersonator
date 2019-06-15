@@ -47,7 +47,7 @@ module Impersonator
       object_to_impersonate = if current_recording&.record_mode?
                                 yield
                               else
-                                generate_double(methods)
+                                Double.new(*methods)
                               end
       impersonate_methods(object_to_impersonate, *methods)
     end
@@ -61,18 +61,6 @@ module Impersonator
     def impersonate_methods(actual_object, *methods)
       raise Impersonator::Errors::ConfigurationError, 'You must start a recording to impersonate objects. Use Impersonator.recording {}' unless @current_recording
       ::Impersonator::Proxy.new(actual_object, recording: current_recording, impersonated_methods: methods)
-    end
-
-    private
-
-    def generate_double(methods)
-      double_class = Class.new do
-        methods.each do |method|
-          define_method(method) {}
-        end
-      end
-
-      double_class.new
     end
   end
 end
