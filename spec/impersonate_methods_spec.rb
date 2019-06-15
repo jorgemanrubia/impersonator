@@ -37,22 +37,20 @@ describe 'Impersonate', clear_recordings: true do
 
     it 'can ignore arguments when matching methods' do
       Impersonator.recording('test recording') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :add)
+        impersonator = Impersonator.impersonate(:add){ Test::Calculator.new }
         impersonator.configure_method_matching_for(:add) do |config|
           config.ignore_arguments_at 0
         end
 
         expect(impersonator.add(1, 2)).to eq(3)
-        expect(actual_calculator).to be_invoked
       end
 
       actual_calculator.reset
 
       Impersonator.recording('test recording') do
-        impersonator = Impersonator.impersonate_methods(actual_calculator, :add)
+        impersonator = Impersonator.impersonate(:add){ Test::Calculator.new }
 
         expect(impersonator.add(99999999, 2)).to eq(3)
-        expect(actual_calculator).not_to be_invoked
       end
     end
   end

@@ -109,10 +109,7 @@ end
 By default, to determine if a method invocation was right, the list of arguments will be matched with `==`. You can configure how this work by providing a list of argument indexes to ignore.
 
 ```ruby
-Impersonator.recording('test recording', disabled: true) do
-  # ...
-end
-impersonator = Impersonator.impersonate(actual_calculator, :add)
+impersonator = Impersonator.impersonate(:add){ Test::Calculator.new }
 impersonator.configure_method_matching_for(:add) do |config|
   config.ignore_arguments_at 0
 end
@@ -177,8 +174,8 @@ Now you can just tag your tests with `impersonator` and an implicit recording na
 ```ruby
 describe Calculator, impersonator: do
   it 'sums numbers' do
-    # there is an implicit recording stored in 'calculator-sums-	numbers.yaml'
-    impersonator = Impersonator.impersonate(actual_calculator, :add)
+    # there is an implicit recording stored in 'calculator-sums-numbers.yaml'
+    impersonator = Impersonator.impersonate(:add){ Calculator.new }
     expect(impersonator.add(1, 2)).to eq(3)
   end
 end
