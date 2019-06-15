@@ -21,7 +21,9 @@ module Impersonator
       @configuration ||= Configuration.new
     end
 
-    # Reset configuration and other global state
+    # Reset configuration and other global state.
+    #
+    # It is meant to be used internally by tests.
     def reset
       @current_recording = nil
       @configuration = nil
