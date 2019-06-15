@@ -2,6 +2,18 @@ describe 'Error detection', clear_recordings: true do
   let(:actual_calculator) { Test::Calculator.new }
   let(:block) { proc {} }
 
+  it 'does not generate recordings when an error is raised' do
+    begin
+      Impersonator.recording('error-recording') do
+        Impersonator.impersonate_methods(actual_calculator, :sum)
+        raise "Some error"
+      end
+    rescue StandardError
+    end
+
+    expect(File.exist?('spec/recordings/error-recording.yml')).to be_falsey
+  end
+
   describe Impersonator::Errors::ConfigurationError do
     it 'raises an error when trying to impersonate without starting a recording' do
       expect { Impersonator.impersonate_methods(actual_calculator, :next, :previous) }.to raise_error(Impersonator::Errors::ConfigurationError)

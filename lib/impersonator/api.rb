@@ -4,8 +4,8 @@ module Impersonator
       @current_recording = ::Impersonator::Recording.new(label, disabled: disabled, recordings_path: configuration.recordings_path)
       @current_recording.start
       yield
-    ensure
       @current_recording.finish
+    ensure
       @current_recording = nil
     end
 
