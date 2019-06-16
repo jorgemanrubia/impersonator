@@ -1,6 +1,6 @@
-# Impersonator
-
 [![CircleCI](https://circleci.com/gh/jorgemanrubia/impersonator.svg?style=svg)](https://circleci.com/gh/jorgemanrubia/impersonator)
+
+# Impersonator
 
 Impersonator is a Ruby library to record and replay object interactions. 
 
