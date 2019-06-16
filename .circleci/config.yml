@@ -1,12 +1,12 @@
 version: 2.1
 defaults: &defaults
-  working_directory: ~/palasaca
+  working_directory: ~/impersonator
   docker:
     - image: circleci/ruby:2.6.2-node-browsers
       environment:
         BUNDLE_PATH: vendor/bundle
         PGHOST: 127.0.0.1
-        PGUSER: palasaca
+        PGUSER: impersonator
 commands:
   prepare:
     description: "Common preparation steps"
