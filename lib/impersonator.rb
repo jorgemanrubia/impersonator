@@ -14,7 +14,7 @@ module Impersonator
   def self.logger
     @logger ||= ::Logger.new(STDOUT).tap do |logger|
       logger.level = Logger::WARN
-      logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+      logger.datetime_format = '%Y-%m-%d %H:%M:%S'
     end
   end
 end

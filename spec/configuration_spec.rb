@@ -27,5 +27,4 @@ describe 'Impersonator.configure', clear_recordings: true do
 
     expect(File.exist?(expected_file_path)).to be_truthy
   end
-
 end

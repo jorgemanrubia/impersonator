@@ -1,5 +1,5 @@
 RSpec.configure do |config|
-  config.before(:example) do
+  config.before do
     clear_recordings_dir
   end
 end
