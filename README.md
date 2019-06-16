@@ -2,14 +2,14 @@
 
 Impersonator is a Ruby library to record and replay object interactions. 
 
-When testing, you often find services that are expensive to invoke and you need to use a [double](https://martinfowler.com/bliki/TestDouble.html) instead. Creating stubs and mocks for simple scenarios is easy but, for complex interactions, things get messy fast. Stubbing elaborated canned response and orchestrating multiple expectations quickly degenerates in brittle tests that are hard to write and maintain.
+When testing, you often find services that are expensive to invoke, and you need to use a [double](https://martinfowler.com/bliki/TestDouble.html) instead. Creating stubs and mocks for simple scenarios is easy, but, for complex interactions, things get messy fast. Stubbing elaborated canned response and orchestrating multiple expectations quickly degenerates in brittle tests that are hard to write and maintain.
 
 Impersonator comes to the rescue. Given an object and a list of methods to impersonate:
 
-- The first time each method is invoked, it will record its invocations, including passed arguments, return values and yielded values. This is known as *record mode*.
-- The next times, it will reproduce the recorded values and will validate that the method was invoked with the same arguments, in a certain order and the exact number of times. This is known as *replay mode*.
+- The first time each method is invoked, it will record its invocations, including passed arguments, return values, and yielded values. This is known as *record mode*.
+- The next times, it will reproduce the recorded values and will validate that the method was invoked with the same arguments, in a specific order and the exact number of times. This is known as *replay mode*.
 
-Impersonator only focuses on validating invocation signature and reproducing output values, which is perfect for many services. It won't work for services that trigger additional logic that is relevant to the test (e.g: if the method sends an email, the impersonated method won't send it). 
+Impersonator only focuses on validating invocation signature and reproducing output values, which is perfect for many services. It won't work for services that trigger additional logic that is relevant to the test (e.g., if the method sends an email, the impersonated method won't send it). 
 
 Familiar with [VCR](https://github.com/vcr/vcr)? Impersonator is like VCR but for ruby objects instead of HTTP.
 
@@ -33,7 +33,7 @@ Use `Impersonator.impersonate` passing in a list of methods to impersonate and a
 Impersonator.impersonate(:add, :divide) { Calculator.new }
 ```
 
-* At record time, `Calculator` will be instantiated and their methods invoked normally, recording the returned values (and yielded values if any).
+* At record time, `Calculator` will be instantiated and their methods normally invoked, recording the returned values (and yielded values if any).
 * At replay time, `Calculator` won't be instantiated. Instead, a double object will be generated on the fly that will replay the recorded values.
 
 ```ruby
@@ -133,13 +133,13 @@ Impersonator.recording('test recording', disabled: true) do
 end
 ```
 
-This will effectively force record mode at all times. This is handy while you are figuring out how interactions with the mocked service go. It will save the recordings but it will never use them.
+This will effectively force record mode at all times. This is handy while you are figuring out how interactions with the mocked service go. It will save the recordings, but it will never use them.
 
 ### Configuring attributes to serialize
 
 `Impersonator` relies on Ruby standard `YAML` library for serializing/deserializing data. It works with simple attributes, arrays, hashes and objects which attributes are serializable in a recurring way. This means that you don't have to care when interchanging value objects, which is a common scenario when impersonating RPC-like clients.
 
-However, there are some types, like `Proc`, anonymous classes or `IO` classes like `File`, that will make the serialization process fail. You can customize which attributes are serialized by overriding `init_with` and `encode_with` in the class you want to serialize. You will typically exclude the problematic attributes by including only the compatible ones.
+However, there are some types, like `Proc`, anonymous classes, or `IO` classes like `File`, that will make the serialization process fail. You can customize which attributes are serialized by overriding `init_with` and `encode_with` in the class you want to serialize. You will typically exclude the problematic attributes by including only the compatible ones.
 
 ```ruby
 class MyClass
