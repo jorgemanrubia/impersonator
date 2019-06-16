@@ -185,7 +185,7 @@ end
 
 ## Thanks
 
-- This library was heavily inspired by [VCR](https://github.com/vcr/vcr). A gem that blown my mind years ago and that has been in my toolbox since then.
+- This library was heavily inspired by [VCR](https://github.com/vcr/vcr). A gem that blew my mind years ago and that has been in my toolbox since then.
 
 ## Links
 
