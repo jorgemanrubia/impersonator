@@ -172,7 +172,7 @@ end
 Now you can just tag your tests with `impersonator` and an implicit recording named after the example will be available automatically, so you don't have to invoke `Impersonator.recording` anymore.
 
 ```ruby
-describe Calculator, impersonator: do
+describe Calculator, :impersonator do
   it 'sums numbers' do
     # there is an implicit recording stored in 'calculator-sums-numbers.yaml'
     impersonator = Impersonator.impersonate(:add){ Calculator.new }
