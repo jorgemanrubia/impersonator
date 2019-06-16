@@ -187,6 +187,10 @@ end
 
 - This library was heavily inspired by [VCR](https://github.com/vcr/vcr). A gem that blown my mind years ago and that has been in my toolbox since then.
 
+## Links
+
+- [Blog post](https://www.jorgemanrubia.com/2019/06/16/impersonator-a-ruby-library-to-record-and-replay-object-interactions/)
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/jorgemanrubia/impersonator.
