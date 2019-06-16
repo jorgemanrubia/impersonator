@@ -13,7 +13,7 @@ module Impersonator
       self.block_invocations = coder['block_invocations']
     end
 
-    def encode_with coder
+    def encode_with(coder)
       coder['block_invocations'] = block_invocations
     end
   end

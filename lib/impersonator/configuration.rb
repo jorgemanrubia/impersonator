@@ -1,6 +1,6 @@
 module Impersonator
   Configuration = Struct.new(:recordings_path, keyword_init: true) do
-    DEFAULT_RECORDINGS_FOLDER = 'recordings'
+    DEFAULT_RECORDINGS_FOLDER = 'recordings'.freeze
 
     def initialize(*)
       super
@@ -10,7 +10,7 @@ module Impersonator
     private
 
     def detect_default_recordings_path
-      base_path = File.exists?('spec') ? 'spec' : 'test'
+      base_path = File.exist?('spec') ? 'spec' : 'test'
       File.join(base_path, DEFAULT_RECORDINGS_FOLDER)
     end
   end

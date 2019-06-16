@@ -54,5 +54,3 @@ module Impersonator
     end
   end
 end
-
-

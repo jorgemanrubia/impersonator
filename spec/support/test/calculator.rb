@@ -34,7 +34,7 @@ module Test
     end
 
     # Will yield 1, 2, 3 ... n
-    def lineal_sequence(n, &block)
+    def lineal_sequence(n)
       invoked!
 
       n.times do |index|

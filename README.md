@@ -1,5 +1,7 @@
 # Impersonator
 
+[![CircleCI](https://circleci.com/gh/jorgemanrubia/impersonator.svg?style=svg)](https://circleci.com/gh/jorgemanrubia/impersonator)
+
 Impersonator is a Ruby library to record and replay object interactions. 
 
 When testing, you often find services that are expensive to invoke, and you need to use a [double](https://martinfowler.com/bliki/TestDouble.html) instead. Creating stubs and mocks for simple scenarios is easy, but, for complex interactions, things get messy fast. Stubbing elaborated canned response and orchestrating multiple expectations quickly degenerates in brittle tests that are hard to write and maintain.

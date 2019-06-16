@@ -6,7 +6,7 @@ describe 'Error detection', clear_recordings: true do
     begin
       Impersonator.recording('error-recording') do
         Impersonator.impersonate_methods(actual_calculator, :add)
-        raise "Some error"
+        raise 'Some error'
       end
     rescue StandardError
     end
@@ -119,7 +119,7 @@ describe 'dummy' do
       end
     end
 
-# The first time it records...
+    # The first time it records...
     Impersonator.recording('calculator add') do
       impersonated_calculator = Impersonator.impersonate(:add) { Calculator.new }
       puts impersonated_calculator.add(2, 3) # 5
