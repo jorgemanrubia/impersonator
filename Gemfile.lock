@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    impersonator (0.1.0)
+    impersonator (0.1.1)
       zeitwerk (~> 2.1.6)
 
 GEM
