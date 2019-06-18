@@ -98,7 +98,7 @@ module Impersonator
     end
 
     def label_as_file_name
-      label.downcase.gsub(/[\(\)\s \#:]/, '-').gsub(/[\-]+/, '-')
+      label.downcase.gsub(/[\(\)\s \#:]/, '-').gsub(/[\-]+/, '-').gsub(/(^-)|(-$)/, '')
     end
 
     def make_sure_recordings_dir_exists
