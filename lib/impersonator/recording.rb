@@ -8,7 +8,6 @@ module Impersonator
 
     attr_reader :label
 
-
     # @param [String] label
     # @param [Boolean] disabled `true` for always working in *record* mode. `false` by default
     # @param [String] the path to save recordings to
