@@ -1,5 +1,12 @@
 module Impersonator
+  # Public API exposed by the global `Impersonator` module.
   module Api
+
+    # Wraps the execution of the yielded code withing a new {Recording recording} titled with the passed label.
+    #
+    # @param [String] label The label for the recording
+    # @param [Boolean] disabled `true` will disable replay mode and always execute code in *record*
+    #   mode. `false` by default
     def recording(label, disabled: false)
       @current_recording = ::Impersonator::Recording.new label,
                                                          disabled: disabled,
@@ -11,14 +18,28 @@ module Impersonator
       @current_recording = nil
     end
 
+    # The current recording, if any, or `nil` otherwise.
+    #
+    # @return [Recording, nil]
     def current_recording
       @current_recording
     end
 
+    # Configures how Impersonator works by yielding a {Configuration configuration} object
+    # you can use to tweak settings.
+    #
+    # ```
+    # Impersonator.configure do |config|
+    #   config.recordings_path = 'my/own/recording/path'
+    # end
+    # ```
+    #
+    # @yieldparam config [Configuration]
     def configure
       yield configuration
     end
 
+    # @return [Configuration]
     def configuration
       @configuration ||= Configuration.new
     end
@@ -43,7 +64,8 @@ module Impersonator
     #
     # If you need to invoke other (not impersonated) methods see #impersonate_method instead.
     #
-    # @return [Object] the impersonated object
+    # @param [Array<Symbols, Strings>] methods list of methods to impersonate
+    # @return [Proxy] the impersonated proxy object
     def impersonate(*methods)
       unless block_given?
         raise ArgumentError, 'Provide a block to instantiate the object to impersonate in record mode'
@@ -62,7 +84,9 @@ module Impersonator
     # The returned object will impersonate the list of methods and will delegate the rest of method
     # calls to the actual object.
     #
-    # @return [Object] the impersonated object
+    # @param [Object] actual_object The actual object to impersonate
+    # @param [Array<Symbols, Strings>] methods list of methods to impersonate
+    # @return [Proxy] the impersonated proxy object
     def impersonate_methods(actual_object, *methods)
       unless @current_recording
         raise Impersonator::Errors::ConfigurationError, 'You must start a recording to impersonate'\
