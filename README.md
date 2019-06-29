@@ -32,7 +32,7 @@ And then execute:
 Use `Impersonator.impersonate` passing in a list of methods to impersonate and a block that will instantiate the object at record time:
 
 ```ruby
-Impersonator.impersonate(:add, :divide) { Calculator.new }
+calculator = Impersonator.impersonate(:add, :divide) { Calculator.new }
 ```
 
 * At record time, `Calculator` will be instantiated and their methods normally invoked, recording the returned values (and yielded values if any).
@@ -47,15 +47,15 @@ end
 
 # The first time it records...
 Impersonator.recording('calculator add') do
-  impersonated_calculator = Impersonator.impersonate(:add) { Calculator.new }
-  puts impersonated_calculator.add(2, 3) # 5
+  calculator = Impersonator.impersonate(:add) { Calculator.new }
+  puts calculator.add(2, 3) # 5
 end
 
 # The next time it replays
 Object.send :remove_const, :Calculator # Calculator does not even have to exist now
 Impersonator.recording('calculator add') do
-  impersonated_calculator = Impersonator.impersonate(:add) { Calculator.new }
-  puts impersonated_calculator.add(2, 3) # 5
+  calculator = Impersonator.impersonate(:add) { Calculator.new }
+  puts calculator.add(2, 3) # 5
 end
 ```
 
@@ -189,6 +189,7 @@ end
 
 ## Links
 
+- [API documentation at rubydoc.info](https://www.rubydoc.info/github/jorgemanrubia/impersonator)
 - [Blog post](https://www.jorgemanrubia.com/2019/06/16/impersonator-a-ruby-library-to-record-and-replay-object-interactions/)
 
 ## Contributing
