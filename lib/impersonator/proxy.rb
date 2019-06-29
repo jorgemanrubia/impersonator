@@ -1,9 +1,17 @@
 module Impersonator
+  # A proxy represents the impersonated object at both record and replay times.
+  #
+  # For not impersonated methods, it will just delegate to the impersonate object. For impersonated
+  # methods, it will interact with the {Recording recording} for recording or replaying the object
+  # interactions.
   class Proxy
     include HasLogger
 
     attr_reader :impersonated_object
 
+    # @param [Object] impersonated_object
+    # @param [Recording] recording
+    # @param [Array<Symbol, String>] impersonated_methods The methods to impersonate
     def initialize(impersonated_object, recording:, impersonated_methods:)
       validate_object_has_methods_to_impersonate!(impersonated_object, impersonated_methods)
 
@@ -25,6 +33,16 @@ module Impersonator
       impersonated_object.respond_to_missing?(method_name, *args)
     end
 
+    # Configure matching options for a given method
+    #
+    # ```ruby
+    # impersonator.configure_method_matching_for(:add) do |config|
+    #   config.ignore_arguments_at 0
+    # end
+    # ```
+    #
+    # @param [String, Symbol] method The method to configure matching options for
+    # @yieldparam config [MethodMatchingConfiguration]
     def configure_method_matching_for(method)
       method_matching_configurations_by_method[method.to_sym] ||= MethodMatchingConfiguration.new
       yield method_matching_configurations_by_method[method]
