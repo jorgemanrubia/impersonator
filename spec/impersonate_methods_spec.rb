@@ -8,7 +8,7 @@ describe 'Impersonate', clear_recordings: true do
       end
     end
 
-    it 'records and impersonates multiple invocations in a row of a method that returns a simple value' do
+    it 'records and impersonates multiple invocations in a row of a method that returns a value' do
       test_impersonation do |impersonator|
         expect(impersonator.next).to eq(1)
         expect(impersonator.next).to eq(2)
