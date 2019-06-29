@@ -1,17 +1,24 @@
 # frozen_string_literal: true
 
 module Impersonator
+  # A recording is responsible for saving interactions at record time, and replaying them at
+  # replay time.
   class Recording
     include HasLogger
 
     attr_reader :label
 
+
+    # @param [String] label
+    # @param [Boolean] disabled `true` for always working in *record* mode. `false` by default
+    # @param [String] the path to save recordings to
     def initialize(label, disabled: false, recordings_path:)
       @label = label
       @recordings_path = recordings_path
       @disabled = disabled
     end
 
+    # Start a recording/replay session
     def start
       logger.debug "Starting recording #{label}..."
       if can_replay?
@@ -21,12 +28,17 @@ module Impersonator
       end
     end
 
+    # Record a {MethodInvocation method invocation} with a given return value
+    # @param [Method] method
+    # @param [Object] return_value
     def record(method, return_value)
       method_invocation = MethodInvocation.new(method_instance: method, return_value: return_value)
 
       @method_invocations << method_invocation
     end
 
+    # Replay a method invocation
+    # @param [Method] method
     def replay(method)
       method_invocation = @method_invocations.shift
       unless method_invocation
@@ -40,6 +52,7 @@ module Impersonator
       method_invocation.return_value
     end
 
+    # Finish a record/replay session.
     def finish
       logger.debug "Recording #{label} finished"
       if record_mode?
@@ -49,10 +62,16 @@ module Impersonator
       end
     end
 
+    # Return whether it is currently at replay mode
+    #
+    # @return [Boolean]
     def replay_mode?
       @replay_mode
     end
 
+    # Return whether it is currently at record mode
+    #
+    # @return [Boolean]
     def record_mode?
       !replay_mode?
     end
