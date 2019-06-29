@@ -1,5 +1,8 @@
 module Impersonator
+  # General configuration settings for Impersonator
   Configuration = Struct.new(:recordings_path, keyword_init: true) do
+    # @!attribute recordings_path [String] The path where recordings are saved to
+
     DEFAULT_RECORDINGS_FOLDER = 'recordings'.freeze
 
     def initialize(*)

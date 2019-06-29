@@ -1,8 +1,8 @@
 module Impersonator
   # Public API exposed by the global `Impersonator` module.
   module Api
-
-    # Wraps the execution of the yielded code withing a new {Recording recording} titled with the passed label.
+    # Wraps the execution of the yielded code withing a new {Recording recording} titled with the
+    # passed label.
     #
     # @param [String] label The label for the recording
     # @param [Boolean] disabled `true` will disable replay mode and always execute code in *record*
