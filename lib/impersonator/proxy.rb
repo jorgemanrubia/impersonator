@@ -39,15 +39,21 @@ module Impersonator
         !object.respond_to?(method.to_sym)
       end
 
-      raise Impersonator::Errors::ConfigurationError, "These methods to impersonate does not exist: #{missing_methods.inspect}" unless missing_methods.empty?
+      unless missing_methods.empty?
+        raise Impersonator::Errors::ConfigurationError, 'These methods to impersonate does not'\
+                      "exist: #{missing_methods.inspect}"
+      end
     end
 
     def invoke_impersonated_method(method_name, *args, &block)
-      method = Method.new(name: method_name, arguments: args, block: block, matching_configuration: method_matching_configurations_by_method[method_name.to_sym])
+      matching_configuration = method_matching_configurations_by_method[method_name.to_sym]
+      method = Method.new(name: method_name, arguments: args, block: block,
+                          matching_configuration: matching_configuration)
       if recording.replay_mode?
         recording.replay(method)
       else
-        @impersonated_object.send(method_name, *args, &method&.block_spy&.block).tap do |return_value|
+        spiable_block = method&.block_spy&.block
+        @impersonated_object.send(method_name, *args, &spiable_block).tap do |return_value|
           recording.record(method, return_value)
         end
       end

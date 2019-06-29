@@ -6,7 +6,8 @@ describe 'Recording file generation', clear_recordings: true do
   end
 
   it 'eliminates symbols from label when generating file names' do
-    validate_fixture_was_generated for_label: '((my()#(example::))', expected_file_name: 'my-example.yml'
+    validate_fixture_was_generated for_label: '((my()#(example::))',
+                                   expected_file_name: 'my-example.yml'
   end
 
   def validate_fixture_was_generated(for_label:, expected_file_name:)

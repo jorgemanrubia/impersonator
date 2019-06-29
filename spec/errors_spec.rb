@@ -16,12 +16,14 @@ describe 'Error detection', clear_recordings: true do
 
   describe Impersonator::Errors::ConfigurationError do
     it 'raises an error when trying to impersonate without starting a recording' do
-      expect { Impersonator.impersonate_methods(actual_calculator, :next, :previous) }.to raise_error(Impersonator::Errors::ConfigurationError)
+      expect { Impersonator.impersonate_methods(actual_calculator, :next, :previous) }
+        .to raise_error(Impersonator::Errors::ConfigurationError)
     end
 
     it 'raises an error when the method to impersonate does not exist' do
       Impersonator.recording('missing method') do
-        expect { Impersonator.impersonate_methods(actual_calculator, :some_missing_method) }.to raise_error(Impersonator::Errors::ConfigurationError)
+        expect { Impersonator.impersonate_methods(actual_calculator, :some_missing_method) }
+          .to raise_error(Impersonator::Errors::ConfigurationError)
       end
     end
   end
@@ -70,7 +72,8 @@ describe 'Error detection', clear_recordings: true do
         impersonator = Impersonator.impersonate_methods(actual_calculator, :add, :lineal_sequence)
 
         impersonator.add(1, 2, &block)
-        expect { impersonator.add(1, 2, &block) }.to raise_error(Impersonator::Errors::MethodInvocationError)
+        expect { impersonator.add(1, 2, &block) }
+          .to raise_error(Impersonator::Errors::MethodInvocationError)
       end
     end
 

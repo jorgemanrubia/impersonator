@@ -4,7 +4,7 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Metrics/LineLength:
-  Enabled: false
+  Max: 105
 
 Metrics/AbcSize:
   Enabled: false

@@ -9,7 +9,8 @@ Gem::Specification.new do |spec|
   spec.email         = ['jorge.manrubia@gmail.com']
 
   spec.summary       = 'Generate test stubs that replay recorded interactions'
-  spec.description   = 'Record and replay object interactions. Ideal for mocking not-http services when testing (just because, for http, VCR is probably what you want)'
+  spec.description   = 'Record and replay object interactions. Ideal for mocking not-http services'\
+                       ' when testing (just because, for http, VCR is probably what you want)'
   spec.homepage      = 'https://github.com/jorgemanrubia/impersonator'
   spec.license       = 'MIT'
 

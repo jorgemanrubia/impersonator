@@ -38,7 +38,8 @@ module Impersonator
         other_arguments.delete_at(ignored_position)
       end
 
-      name == other_method.name && my_arguments == other_arguments && !block_spy == !other_method.block_spy
+      name == other_method.name && my_arguments == other_arguments &&
+        !block_spy == !other_method.block_spy
     end
   end
 end

@@ -29,7 +29,10 @@ module Impersonator
 
     def replay(method)
       method_invocation = @method_invocations.shift
-      raise Impersonator::Errors::MethodInvocationError, "Unexpected method invocation received: #{method}" unless method_invocation
+      unless method_invocation
+        raise Impersonator::Errors::MethodInvocationError, 'Unexpected method invocation received:'\
+              "#{method}"
+      end
 
       validate_method_signature!(method, method_invocation.method_instance)
       replay_block(method_invocation, method)
@@ -88,8 +91,9 @@ module Impersonator
 
     def finish_in_replay_mode
       unless @method_invocations.empty?
-        raise Impersonator::Errors::MethodInvocationError, "Expecting #{@method_invocations.length} method invocations"\
-                                                            " that didn't happen: #{@method_invocations.inspect}"
+        raise Impersonator::Errors::MethodInvocationError,
+              "Expecting #{@method_invocations.length} method invocations"\
+              " that didn't happen: #{@method_invocations.inspect}"
       end
     end
 
