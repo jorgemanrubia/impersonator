@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    impersonator (0.1.1)
+    impersonator (0.1.2)
       zeitwerk (~> 2.1.6)
 
 GEM
@@ -41,7 +41,7 @@ GEM
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.1)
     unicode-display_width (1.6.0)
-    zeitwerk (2.1.6)
+    zeitwerk (2.1.8)
 
 PLATFORMS
   ruby
