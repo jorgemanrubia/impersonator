@@ -69,6 +69,5 @@ module Impersonator
                           matching_configuration: matching_configuration)
       recording.invoke(@impersonated_object, method, args)
     end
-
   end
 end
