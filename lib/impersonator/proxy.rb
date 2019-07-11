@@ -67,14 +67,7 @@ module Impersonator
       matching_configuration = method_matching_configurations_by_method[method_name.to_sym]
       method = Method.new(name: method_name, arguments: args, block: block,
                           matching_configuration: matching_configuration)
-      if recording.replay_mode?
-        recording.replay(method)
-      else
-        spiable_block = method&.block_spy&.block
-        @impersonated_object.send(method_name, *args, &spiable_block).tap do |return_value|
-          recording.record(method, return_value)
-        end
-      end
+      recording.invoke(@impersonated_object, method, args)
     end
   end
 end
