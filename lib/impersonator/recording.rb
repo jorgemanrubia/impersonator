@@ -27,28 +27,15 @@ module Impersonator
       end
     end
 
-    # Record a {MethodInvocation method invocation} with a given return value
-    # @param [Method] method
-    # @param [Object] return_value
-    def record(method, return_value)
-      method_invocation = MethodInvocation.new(method_instance: method, return_value: return_value)
-
-      @method_invocations << method_invocation
-    end
-
-    # Replay a method invocation
-    # @param [Method] method
-    def replay(method)
-      method_invocation = @method_invocations.shift
-      unless method_invocation
-        raise Impersonator::Errors::MethodInvocationError, 'Unexpected method invocation received:'\
-              "#{method}"
+    def invoke(impersonated_object, method, args)
+      if replay_mode?
+        replay(method)
+      else
+        spiable_block = method&.block_spy&.block
+        impersonated_object.send(method.name, *args, &spiable_block).tap do |return_value|
+          record(method, return_value)
+        end
       end
-
-      validate_method_signature!(method, method_invocation.method_instance)
-      replay_block(method_invocation, method)
-
-      method_invocation.return_value
     end
 
     # Finish a record/replay session.
@@ -79,6 +66,30 @@ module Impersonator
 
     def can_replay?
       !@disabled && File.exist?(file_path)
+    end
+
+    # Record a {MethodInvocation method invocation} with a given return value
+    # @param [Method] method
+    # @param [Object] return_value
+    def record(method, return_value)
+      method_invocation = MethodInvocation.new(method_instance: method, return_value: return_value)
+
+      @method_invocations << method_invocation
+    end
+
+    # Replay a method invocation
+    # @param [Method] method
+    def replay(method)
+      method_invocation = @method_invocations.shift
+      unless method_invocation
+        raise Impersonator::Errors::MethodInvocationError, 'Unexpected method invocation received:'\
+              "#{method}"
+      end
+
+      validate_method_signature!(method, method_invocation.method_instance)
+      replay_block(method_invocation, method)
+
+      method_invocation.return_value
     end
 
     def replay_block(recorded_method_invocation, method_to_replay)
