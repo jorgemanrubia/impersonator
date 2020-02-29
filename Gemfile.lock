@@ -14,7 +14,7 @@ GEM
     parser (2.6.3.0)
       ast (~> 2.4.0)
     rainbow (3.0.0)
-    rake (10.5.0)
+    rake (13.0.1)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -49,7 +49,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.17)
   impersonator!
-  rake (~> 10.0)
+  rake (~> 13.0)
   rspec (~> 3.0)
   rspec_junit_formatter
   rubocop
